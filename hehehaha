@@ -1,0 +1,82 @@
+import javafx.application.Application;
+import javafx.scene.Group;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
+import javafx.geometry.Pos;
+import javafx.event.EventHandler;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.MouseButton;
+import javafx.scene.shape.Circle;
+
+public class Main extends Application {
+
+    @Override
+    public void start(Stage primaryStage) {
+
+        Label label;
+        VBox vbox;
+        Scene scene;
+
+        label = new Label("");
+        Circle circle = new Circle(50, 100, 100);
+        circle.setFill(Color.YELLOW);
+        Rectangle rect = new Rectangle(30, 20, 70, 70);
+        rect.setFill(Color.BLUE);
+        Line line = new Line(30, 20, 100, 100);
+        line.setStrokeWidth(5);
+        line.setStroke(Color.RED);
+
+        // Desas laukums
+        Rectangle[][] grid = new Rectangle[3][3];
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                Rectangle cell = new Rectangle(80, 80);
+                cell.setFill(Color.TRANSPARENT);
+                cell.setStroke(Color.BLACK);
+                cell.setStrokeWidth(2);
+                cell.setX(i * 100 + 50);
+                cell.setY(j * 100 + 50);
+                grid[i][j] = cell;
+            }
+        }
+
+        Group group = new Group(circle, rect, line);
+        group.getChildren().addAll((Object[]) grid);
+        vbox = new VBox(label, group);
+
+        // vbox.setSpacing(20);
+        vbox.setAlignment(Pos.CENTER);
+
+        scene = new Scene(vbox, 400, 400);
+
+        EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+                if (e.getTarget() instanceof Rectangle) {
+                    Rectangle clickedCell = (Rectangle) e.getTarget();
+                    if (e.getButton() == MouseButton.PRIMARY)
+                        clickedCell.setFill(Color.RED); // Uzzīmēt krustiņu
+                    else if (e.getButton() == MouseButton.SECONDARY)
+                        clickedCell.setFill(Color.BLUE); // Uzzīmēt apli
+                }
+            }
+        };
+
+        // Reģistrēt notikumu apstrādātāju
+        scene.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
+
+        primaryStage.setTitle("Desas");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+}
